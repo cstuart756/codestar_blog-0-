@@ -25,7 +25,14 @@ SECRET_KEY = 'django-insecure-b#b$+%y5ozfgkin%38(gti_84k%dq-4qtjzh0jenp_$@@s#-v6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://git.heroku.com/codestar-blog-0-cstuart756.git.herokuapp.com']
+ALLOWED_HOSTS = [
+    '.herokuapp.com',
+    'codestar-blog-0-cstuart756-41b96422ac95.herokuapp.com',
+    'localhost',
+    '127.0.0.1',
+]
+
+
 
 
 # Application definition
@@ -37,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'blog',
+
+
 ]
 
 MIDDLEWARE = [
