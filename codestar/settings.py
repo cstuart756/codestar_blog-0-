@@ -14,9 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------
 # Security
 # ------------------------------
-SECRET_KEY = 'A597erx79!'  # Replace with environment variable in production
-DEBUG = False  # Set False in production
-ALLOWED_HOSTS = ['*']  # Restrict this in production
+SECRET_KEY = 'A597erx79!'  # For production, use an environment variable
+DEBUG = False  # Set to True locally, False in production
+ALLOWED_HOSTS = ['*']  # Replace with your domain in production
 
 # Trusted origins for CSRF
 CSRF_TRUSTED_ORIGINS = [
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
 # Middleware
 # ------------------------------
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Must be near the top
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serves static files in production
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,7 +77,7 @@ TEMPLATES = [
 ]
 
 # ------------------------------
-# Database (SQLite for dev)
+# Database (SQLite for development)
 # ------------------------------
 DATABASES = {
     'default': {
@@ -103,3 +103,23 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# ------------------------------
+# Internationalization
+# ------------------------------
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
+
+# ------------------------------
+# Static files (CSS, JS, Images)
+# ------------------------------
+STATIC_URL = '/static/'  # Required
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Where collectstatic will put files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# ------------------------------
+# Default primary key field
+# ------------------------------
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
