@@ -1,9 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
 class Comment(models.Model):
     post = models.ForeignKey(
-        'Post',
+        Post,  # now this works because Post is defined above
         on_delete=models.CASCADE,
         related_name="comments"
     )
@@ -16,14 +25,8 @@ class Comment(models.Model):
     approved = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
-    # -----------------------------
-    # Metadata
-    # -----------------------------
     class Meta:
-        ordering = ["created_on"]  # oldest comments first
+        ordering = ["created_on"]
 
-    # -----------------------------
-    # String representation
-    # -----------------------------
     def __str__(self):
         return f"Comment '{self.body}' by {self.author.username}"
