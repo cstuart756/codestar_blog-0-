@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 # ------------------------------
 SECRET_KEY = 'A597erx79!'  # Replace with env var for production
-DEBUG = False  # Set to True locally if needed
+DEBUG = True  # Set to True locally if needed
 ALLOWED_HOSTS = ['*']  # Replace with your domains in production
 
 CSRF_TRUSTED_ORIGINS = [
