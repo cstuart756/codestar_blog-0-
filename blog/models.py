@@ -20,9 +20,11 @@ class Post(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS, default=0)
 
-    def __str__(self):
-        return self.title
+    class Meta:
+        ordering = ["-created_on"]  # newest posts first
 
+    def __str__(self):
+        return f"{self.title} | written by {self.author.username}"
 
 class Comment(models.Model):
     post = models.ForeignKey(
