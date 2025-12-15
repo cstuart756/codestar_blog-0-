@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
 SECRET_KEY = 'A597erx79!'
-DEBUG = True  # Set to False in production
+DEBUG = False  # Set to False in production
 ALLOWED_HOSTS = ['*']
 
 # Trusted origins for CSRF
