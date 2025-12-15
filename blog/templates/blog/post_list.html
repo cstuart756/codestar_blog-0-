@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Homepage</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>My Blog</h1>
+    </header>
+
+    <main>
+        <h2>All Posts</h2>
+
+        {% if object_list %}
+            <ul>
+                {% for post in object_list %}
+                    <li>
+                        <h3>{{ post.title }}</h3>
+                        <p>By {{ post.author.username }} on {{ post.created_on|date:"F j, Y" }}</p>
+                        <p>{{ post.excerpt }}</p>
+                        <a href="#">Read more...</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No posts yet.</p>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>&copy; {{ now|date:"Y" }} My Blog</p>
+    </footer>
+</body>
+</html>
