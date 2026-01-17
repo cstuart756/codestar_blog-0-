@@ -1,0 +1,13 @@
+[
+    {
+        "model": "blog.post",
+        "pk": 1,
+        "fields": {
+            "title": "Post title",
+            "slug": "post-title",
+            "content": "Post body",
+            "created_on": "2024-01-01T10:00:00Z",
+            "status": 1
+        }
+    }
+]
