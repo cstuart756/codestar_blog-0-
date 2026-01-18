@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
 DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".herokuapp.com", "https://codestar-blogapp-a6f686ccb9ba.herokuapp.com/",]
 
 # APPLICATIONS
 INSTALLED_APPS = [
