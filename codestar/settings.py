@@ -1,72 +1,48 @@
-import os
 from pathlib import Path
-
+import os
 import dj_database_url
-
-# Load env.py if present
-if os.path.isfile("env.py"):
-    import env  # noqa
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECURITY
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
+DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+# Heroku provides the app hostname dynamically; easiest safe approach:
+ALLOWED_HOSTS += [os.environ.get("HEROKU_APP_NAME", ""), ".herokuapp.com"]
+ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]  # remove empty
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "https://codestar-blogapp-a6f686ccb9ba.herokuapp.com/",
-]
+CSRF_TRUSTED_ORIGINS = []
+if os.environ.get("HEROKU_APP_NAME"):
+    CSRF_TRUSTED_ORIGINS.append(f"https://{os.environ['HEROKU_APP_NAME']}.herokuapp.com")
 
-# Add your Heroku app hostname when deployed
-# Example:
-# ALLOWED_HOSTS += ["your-app-name.herokuapp.com"]
-
-INSTALLED_APPS = [
+# APPLICATIONS
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
-    "crispy_forms",
-    # If using bootstrap 5 pack:
-    "crispy_bootstrap5",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    # Cloudinary storage MUST be immediately after staticfiles
-    "cloudinary_storage",
-
-    "django.contrib.sites",
-
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-
-    "crispy_forms",
-    "crispy_bootstrap5",
-
-    "django_summernote",
-
-    "cloudinary",
-
-    "blog",
-    "about",
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+THIRD_PARTY_APPS = [
+    # IMPORTANT: include crispy_forms ONCE
+    "crispy_forms",
+    "crispy_bootstrap5",
+]
 
-SITE_ID = 1
+LOCAL_APPS = [
+    # Add your apps here, e.g.:
+    # "blog",
+]
 
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # WhiteNoise to serve static files on Heroku
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -82,7 +58,7 @@ ROOT_URLCONF = "codestar.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates"],  # optional
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -97,40 +73,50 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "codestar.wsgi.application"
 
+# DATABASE
 DATABASES = {
-    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+        conn_max_age=600,
+        ssl_require=True if os.environ.get("DATABASE_URL") else False,
+    )
 }
 
+# AUTH PASSWORD VALIDATION (default)
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LANGUAGE_CODE = "en-us"
-
+LANGUAGE_CODE = "en-gb"
 TIME_ZONE = "Europe/London"
-
 USE_I18N = True
-
 USE_TZ = True
 
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+# STATIC FILES
+STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# WhiteNoise: compressed manifest storage
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
+}
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Cloudinary media storage
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+# CRISPY FORMS (Bootstrap 5)
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# SECURITY SETTINGS FOR HEROKU (recommended defaults)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "1") == "1"
+CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE", "1") == "1"
+SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "1") == "1"
