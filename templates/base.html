@@ -1,15 +1,37 @@
 ﻿{% load static %}
+{% url 'home' as home_url %}
+{% url 'about' as about_url %}
+
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Codestar{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  </head>
-  <body>
-    <main>
-      {% block content %}{% endblock %}
-    </main>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Codestar{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page"
+            href="{{ home_url }}">Home</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == about_url %}active{% endif %}" aria-current="page"
+            href="{{ about_url }}">About</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+
 </html>
