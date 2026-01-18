@@ -16,6 +16,7 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    "https://codestar-blogapp-a6f686ccb9ba.herokuapp.com/",
 ]
 
 # Add your Heroku app hostname when deployed
