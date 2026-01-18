@@ -28,7 +28,7 @@ if not SECRET_KEY:
     raise ValueError("Missing SECRET_KEY environment variable")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Hosts
 # Local development can safely use the defaults.
@@ -55,6 +55,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "crispy_forms",
+    "crispy_bootstrap5",
 
     # Third-party
     "django_summernote",
@@ -62,6 +69,10 @@ INSTALLED_APPS = [
     # Your apps
     "blog",
     'about',
+    SITE_ID = 1
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
 ]
 
 MIDDLEWARE = [
@@ -73,6 +84,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "codestar.urls"
@@ -119,6 +131,13 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
+
+
+    AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
 
 
 # Password validation

@@ -1,24 +1,37 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
-{% load static %}
-{% url 'home' as home_url %}
-{% url 'about' as about_url %}
-
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row">
         <div class="col-4 text-center">
-            <img src="{% static 'images/nobody.jpg' %}" width="75%" />
+            <img src="{% static 'images/nobody.jpg' %}" width="75%" alt="Profile image">
         </div>
+
         <div class="col-8">
             <h2>{{ about.title }}</h2>
-            {{ about.content | safe }}
+            {{ about.content|safe }}
         </div>
     </div>
+
     <div class="row">
-        <div class="col text-right">
-            <p class="text-end"><em>Updated on: {{ about.updated_on }}</em></p>
+        <div class="col text-end">
+            <p><em>Updated on: {{ about.updated_on }}</em></p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <h3>Collaborate</h3>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ collaborate_form|crispy }}
+                <button class="btn btn-secondary" type="submit">Submit</button>
+            </form>
         </div>
     </div>
 </div>
